@@ -14,16 +14,41 @@ export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
-  function handleCreateNewTask() {
-    // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
+  function randomNum(){
+    const number = Math.floor(Math.random() * 100); //Getting a random rounded number between 0 and 100
+
+    return number;
+  }
+
+  function handleCreateNewTask() { 
+    
+    if(!newTaskTitle) return; //Checking if the user typed a new title
+
+    const randomId = randomNum(); //Getting an random ID
+
+    const newTask:Task = { //Creating a new object
+      id: randomId,
+      title: newTaskTitle,
+      isComplete: false
+    }
+
+    setTasks(oldTasks => [...oldTasks, newTask]); //Adding the new task without change the old tasks's state
+    setNewTaskTitle(''); //Setting the new task title to empty
   }
 
   function handleToggleTaskCompletion(id: number) {
-    // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+
+    tasks.map((task) => { //Mapping the array
+      (task.id == id ? (task.isComplete = !task.isComplete) : task) //Checking the ID and setting the isComplete's value to the opposite
+    })
+
+    setTasks([...tasks]) //Overwriting tasks array with the updated value of isComplete
   }
 
   function handleRemoveTask(id: number) {
-    // Remova uma task da listagem pelo ID
+
+    const filteredTasks = tasks.filter((task) => { return task.id != id }) //Get an array without the task selected
+    setTasks(filteredTasks); //Setting the tasks array with the filtered array 
   }
 
   return (
